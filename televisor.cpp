@@ -1,4 +1,4 @@
-﻿#include "televisor.h"
+#include "televisor.h"
 #include <Windows.h>
 
 extern HDC hdc;
@@ -10,50 +10,50 @@ Location::Location(int InitX, int InitY) {
 }//end Location
 
 //start Location::~Location
-Location::~Location() 
+Location::~Location()
 {
 }//end Location::~Location
 
 //Возвращаем координаты
 //start Location::CetX
-int Location::GetX() 
-{ 
-    return x; 
+int Location::GetX()
+{
+    return x;
 }//end Location::GetX
 
 //start Location::GetY
-int Location::GetY() 
-{ 
-    return y; 
+int Location::GetY()
+{
+    return y;
 }//end Location::GetY
 
 //Изменяем координаты
 //start Location::SetX
-void Location::SetX(int NewX) 
-{ 
-    x = NewX; 
+void Location::SetX(int NewX)
+{
+    x = NewX;
 }//end Location::SetX
 
 //start Location::SetY
-void Location::SetY(int NewY) 
-{ 
-    y = NewY; 
+void Location::SetY(int NewY)
+{
+    y = NewY;
 }//end Location::SetY
 
 //start Point::Point
-Point::Point(int InitX, int InitY) : Bounds(InitX, InitY) 
+Point::Point(int InitX, int InitY) : Bounds(InitX, InitY)
 {
     visible = false; // Изначально объект невидим
 }//end Point::Point
 
 //start Point::~Point
-Point::~Point() 
+Point::~Point()
 {
 }//end Point::~Point
 
 // Перемещение объекта 
 //start Point::MoveTo
-void Point::MoveTo(int NewX, int NewY) 
+void Point::MoveTo(int NewX, int NewY)
 {
     // Если объект уже видим, спрячем его перед перемещением
     if (visible) Hide();
@@ -62,15 +62,8 @@ void Point::MoveTo(int NewX, int NewY)
     Show();
 }//end Point::MoveTo
 
-// Базовый класс для телевизоров
-//start TVBase::TVBase
-TVBase::TVBase(int InitX, int InitY) : Point(InitX, InitY) 
-{
-
-}//end TVBase::TVBase
-
 //start Figure::Figure
-Figure::Figure(int InitX, int InitY, int figureId) : Point(InitX, InitY) 
+Figure::Figure(int InitX, int InitY, int figureId) : Point(InitX, InitY)
 {
     id = figureId;
     // Устанавливаем значения по умолчанию
@@ -79,12 +72,12 @@ Figure::Figure(int InitX, int InitY, int figureId) : Point(InitX, InitY)
 }//end Figure::Figure
 
 //start Figure::~Figure
-Figure::~Figure() 
+Figure::~Figure()
 {
 }//end Figure::~Figure
 
 //start Figure::SetBounds
-void Figure::SetBounds(int left, int right, int top, int bottom) 
+void Figure::SetBounds(int left, int right, int top, int bottom)
 {
     leftOffset = left;
     rightOffset = right;
@@ -93,21 +86,21 @@ void Figure::SetBounds(int left, int right, int top, int bottom)
 }//end Figure::SetBounds
 
 //start Figure::SetSize
-void Figure::SetSize(int w, int h) 
+void Figure::SetSize(int w, int h)
 {
-    width = w; 
-    height = h; 
+    width = w;
+    height = h;
 }//end Figure::SetSize
 
 //Figure::SetDimensions
-void Figure::SetDimensions(int len, int head) 
+void Figure::SetDimensions(int len, int head)
 {
-    length = len; 
-    head_size = head; 
+    length = len;
+    head_size = head;
 }//end Figure::SetDimensions
 
 //start Figure::Hide
-void Figure::Hide() 
+void Figure::Hide()
 {
     visible = false;
     HBRUSH brush = CreateSolidBrush(RGB(255, 255, 255));
@@ -123,80 +116,8 @@ void Figure::Hide()
     DeleteObject(pen);
 }//end Figure::Hide
 
-// Основной класс телевизора
-//start Television::Television
-Television::Television(int InitX, int InitY) : TVBase(InitX, InitY) 
-{
-    id = 0; // Идентификатор базового телевизора
-}//end Television::Television
-
-//start Television::~Television
-Television::~Television() 
-{ 
-}//end Television::~Television
-
-// Отрисовка телевизора
-//start Television::Show
-void Television::Show() 
-{
-    visible = true;
-
-    // Создание кистей для рисования
-    HPEN PenR = CreatePen(PS_SOLID, 2, RGB(139, 69, 19)); // Коричневый - корпус
-    HPEN PenB = CreatePen(PS_SOLID, 2, RGB(0, 0, 0));     // Черный - экран и детали
-
-    // Рисование корпуса телевизора
-    SelectObject(hdc, PenR);
-    Rectangle(hdc, x - 80, y - 60, x + 80, y + 70);
-
-    // Рисование основных элементов
-    SelectObject(hdc, PenB);
-    Rectangle(hdc, x - 70, y - 50, x + 70, y + 50);  // Основной экран
-    Rectangle(hdc, x - 60, y + 30, x + 60, y + 45);  // Панель управления
-    RoundRect(hdc, x - 55, y - 35, x + 55, y + 25, 10, 10); // Закругленный экран
-
-    // Рисование кнопок
-    Ellipse(hdc, x - 45, y + 42, x - 35, y + 32); // Левая кнопка
-    Ellipse(hdc, x - 30, y + 42, x - 20, y + 32); // Центральная кнопка
-    Ellipse(hdc, x + 30, y + 42, x + 40, y + 32); // Правая кнопка
-
-    // Рисование ножек
-    Rectangle(hdc, x - 70, y + 70, x - 60, y + 80); // Левая ножка
-    Rectangle(hdc, x + 60, y + 70, x + 70, y + 80); // Правая ножка
-
-    // Очистка ресурсов
-    DeleteObject(PenB);
-    DeleteObject(PenR);
-}//end Television::Show
-
-// Скрытие телевизора (закрашивание белым прямоугольником)
-//start Television::Hide
-void Television::Hide() 
-{
-    visible = false;
-
-    // Создание белых кисти и пера для закрашивания
-    HBRUSH brush = CreateSolidBrush(RGB(255, 255, 255));
-    HPEN pen = CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
-
-    // Сохранение старых объектов и выбор новых
-    HBRUSH oldBrush = (HBRUSH)SelectObject(hdc, brush);
-    HPEN oldPen = (HPEN)SelectObject(hdc, pen);
-
-    // Закрашивание области телевизора
-    Rectangle(hdc, x - 85, y - 120, x + 85, y + 85);
-
-    // Восстановление старых объектов
-    SelectObject(hdc, oldBrush);
-    SelectObject(hdc, oldPen);
-
-    // Очистка ресурсов
-    DeleteObject(brush);
-    DeleteObject(pen);
-}//end Television::Hide
-
 //start Molotok::Molotok
-Molotok::Molotok(int InitX, int InitY, int len, int head) : Figure(InitX, InitY, 0) 
+Molotok::Molotok(int InitX, int InitY, int len, int head) : Figure(InitX, InitY, 0)
 {
     // Используем общий метод для установки размеров
     SetDimensions(len, head);
@@ -205,12 +126,12 @@ Molotok::Molotok(int InitX, int InitY, int len, int head) : Figure(InitX, InitY,
 }//end Molotok::Molotok
 
 //start Molotok::~Molotok
-Molotok::~Molotok() 
-{ 
+Molotok::~Molotok()
+{
 }//end Molotok::~Molotok
 
 //start Molotok::Show
-void Molotok::Show() 
+void Molotok::Show()
 {
     visible = true;
 
@@ -245,7 +166,7 @@ void Molotok::Show()
 
 // Класс аквариума
 //start Aquarium::Aquarium
-Aquarium::Aquarium(int InitX, int InitY, int w, int h) : Figure(InitX, InitY, 1) 
+Aquarium::Aquarium(int InitX, int InitY, int w, int h) : Figure(InitX, InitY, 1)
 {
     // Используем общий метод для установки размеров
     SetSize(w, h);
@@ -254,13 +175,13 @@ Aquarium::Aquarium(int InitX, int InitY, int w, int h) : Figure(InitX, InitY, 1)
 }//end Aquarium::Aquarium
 
 //start Aquarium::~Aquarium
-Aquarium::~Aquarium() 
+Aquarium::~Aquarium()
 {
 }//end Aquarium::~Aquarium
 
 // Отрисовка аквариума
 //start Aquarium::Show
-void Aquarium::Show() 
+void Aquarium::Show()
 {
     visible = true;
 
@@ -300,187 +221,493 @@ void Aquarium::Show()
     DeleteObject(brushSand);
 }//end Aquarium::Show
 
-// Телевизор с антенной
-//start TelevisionWithAntenna::TelevisionWithAntenna
-TelevisionWithAntenna::TelevisionWithAntenna(int InitX, int InitY) : Television(InitX, InitY) 
+// Простой круг с прямоугольной областью коллизии
+//start SimpleCircle::SimpleCircle
+SimpleCircle::SimpleCircle(int InitX, int InitY, int r) : Figure(InitX, InitY, 2)
 {
-    id = 1; // Идентификатор телевизора с антенной
+    radius = r;
+
+    // Область коллизии будет прямоугольной
+    SetBounds(radius + 5, radius + 5, radius + 5, radius + 5);
+
+    // Устанавливаем размер (используется для границ)
+    SetSize(radius * 2, radius * 2);
+}//end SimpleCircle::SimpleCircle
+
+//start SimpleCircle::~SimpleCircle
+SimpleCircle::~SimpleCircle()
+{
+}//end SimpleCircle::~SimpleCircle
+
+// Отрисовка круга
+//start SimpleCircle::Show
+void SimpleCircle::Show()
+{
+    visible = true;
+
+    // Рисуем круг (зеленый)
+    HPEN circlePen = CreatePen(PS_SOLID, 3, RGB(0, 150, 0));
+    HBRUSH circleBrush = CreateSolidBrush(RGB(200, 255, 200));
+
+    HPEN oldPen = (HPEN)SelectObject(hdc, circlePen);
+    HBRUSH oldBrush = (HBRUSH)SelectObject(hdc, circleBrush);
+
+    // Рисуем закрашенный круг
+    Ellipse(hdc, x - radius, y - radius, x + radius, y + radius);
+
+    // Добавляем контур для лучшей видимости
+    HPEN outlinePen = CreatePen(PS_SOLID, 1, RGB(0, 100, 0));
+    SelectObject(hdc, outlinePen);
+    Ellipse(hdc, x - radius, y - radius, x + radius, y + radius);
+
+    // Добавляем крестик в центре для обозначения центра
+    HPEN centerPen = CreatePen(PS_SOLID, 1, RGB(255, 0, 0));
+    SelectObject(hdc, centerPen);
+
+    // Вертикальная линия крестика
+    MoveToEx(hdc, x, y - 5, NULL);
+    LineTo(hdc, x, y + 5);
+
+    // Горизонтальная линия крестика
+    MoveToEx(hdc, x - 5, y, NULL);
+    LineTo(hdc, x + 5, y);
+
+    // Восстанавливаем старые объекты
+    SelectObject(hdc, oldPen);
+    SelectObject(hdc, oldBrush);
+
+    // Очистка ресурсов
+    DeleteObject(circlePen);
+    DeleteObject(circleBrush);
+    DeleteObject(outlinePen);
+    DeleteObject(centerPen);
+}//end SimpleCircle::Show
+
+
+//start TVBase::TVBase
+TVBase::TVBase(int InitX, int InitY) : Point(InitX, InitY)
+{
+    id = 0;
+}//end TVBase::TVBase
+
+//start TVBase::~TVBase
+TVBase::~TVBase()
+{
+}//end TVBase::~TVBase
+
+//start TVBase::Show
+void TVBase::Show()
+{
+    visible = true;
+
+    // Порядок рисования частей телевизора
+    DrawSpeakers();    // Динамики (если есть) - рисуем первыми
+    DrawBody();        // Корпус
+    DrawScreen();      // Экран
+    DrawControlPanel();// Панель управления
+    DrawButtons();     // Кнопки
+    DrawLegs();        // Ножки
+    DrawAntenna();     // Антенна (если есть)
+}//end TVBase::Show
+
+//start TVBase::Hide
+void TVBase::Hide()
+{
+    visible = false;
+
+    // Создание белых кисти и пера для закрашивания
+    HBRUSH brush = CreateSolidBrush(RGB(255, 255, 255));
+    HPEN pen = CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
+
+    // Сохранение старых объектов и выбор новых
+    HBRUSH oldBrush = (HBRUSH)SelectObject(hdc, brush);
+    HPEN oldPen = (HPEN)SelectObject(hdc, pen);
+
+    // Закрашивание области телевизора
+    Rectangle(hdc, GetLeft() - 5, GetTop() - 5, GetRight() + 5, GetBottom() + 5);
+
+    // Восстановление старых объектов
+    SelectObject(hdc, oldBrush);
+    SelectObject(hdc, oldPen);
+
+    // Очистка ресурсов
+    DeleteObject(brush);
+    DeleteObject(pen);
+}//end TVBase::Hide
+
+//start Television::Television
+Television::Television(int InitX, int InitY) : TVBase(InitX, InitY)
+{
+    SetId(0);
+}//end Television::Television
+
+//start Television::~Television
+Television::~Television()
+{
+}//end Television::~Television
+
+//start Television::DrawBody
+void Television::DrawBody()
+{
+    HPEN PenR = CreatePen(PS_SOLID, 2, RGB(139, 69, 19));
+    SelectObject(hdc, PenR);
+    Rectangle(hdc, x - 80, y - 60, x + 80, y + 70);
+    DeleteObject(PenR);
+}//end Television::DrawBody
+
+//start Television::DrawScreen
+void Television::DrawScreen()
+{
+    HPEN PenB = CreatePen(PS_SOLID, 2, RGB(0, 0, 0));
+    SelectObject(hdc, PenB);
+    Rectangle(hdc, x - 70, y - 50, x + 70, y + 50);
+    RoundRect(hdc, x - 55, y - 35, x + 55, y + 25, 10, 10);
+    DeleteObject(PenB);
+}//end Television::DrawScreen
+
+//start Television::DrawControlPanel
+void Television::DrawControlPanel()
+{
+    HPEN PenB = CreatePen(PS_SOLID, 2, RGB(0, 0, 0));
+    SelectObject(hdc, PenB);
+    Rectangle(hdc, x - 60, y + 30, x + 60, y + 45);
+    DeleteObject(PenB);
+}//end Television::DrawControlPanel
+
+//start Television::DrawButtons
+void Television::DrawButtons()
+{
+    HPEN PenB = CreatePen(PS_SOLID, 2, RGB(0, 0, 0));
+    SelectObject(hdc, PenB);
+    Ellipse(hdc, x - 45, y + 42, x - 35, y + 32);
+    Ellipse(hdc, x - 30, y + 42, x - 20, y + 32);
+    Ellipse(hdc, x + 30, y + 42, x + 40, y + 32);
+    DeleteObject(PenB);
+}//end Television::DrawButtons
+
+//start Television::DrawLegs
+void Television::DrawLegs()
+{
+    HPEN PenB = CreatePen(PS_SOLID, 2, RGB(0, 0, 0));
+    SelectObject(hdc, PenB);
+    Rectangle(hdc, x - 70, y + 70, x - 60, y + 80);
+    Rectangle(hdc, x + 60, y + 70, x + 70, y + 80);
+    DeleteObject(PenB);
+}//end Television::DrawLegs
+
+//start TelevisionWithAntenna::TelevisionWithAntenna
+TelevisionWithAntenna::TelevisionWithAntenna(int InitX, int InitY) : TVBase(InitX, InitY)
+{
+    SetId(1);
 }//end TelevisionWithAntenna::TelevisionWithAntenna
 
 //start TelevisionWithAntenna::~TelevisionWithAntenna
-TelevisionWithAntenna::~TelevisionWithAntenna() 
+TelevisionWithAntenna::~TelevisionWithAntenna()
 {
 }//end TelevisionWithAntenna::~TelevisionWithAntenna
 
-// Отрисовка телевизора с антенной
-//start TelevisionWithAntenna::Show
-void TelevisionWithAntenna::Show() 
+// Методы TelevisionWithAntenna наследуют от TVBase
+void TelevisionWithAntenna::DrawBody()
 {
-    // рисуем базовый телевизор
-    Television::Show();
+    HPEN PenR = CreatePen(PS_SOLID, 2, RGB(139, 69, 19));
+    SelectObject(hdc, PenR);
+    Rectangle(hdc, x - 80, y - 60, x + 80, y + 70);
+    DeleteObject(PenR);
+}
 
-    // добавляем антенну
+void TelevisionWithAntenna::DrawScreen()
+{
+    HPEN PenB = CreatePen(PS_SOLID, 2, RGB(0, 0, 0));
+    SelectObject(hdc, PenB);
+    Rectangle(hdc, x - 70, y - 50, x + 70, y + 50);
+    RoundRect(hdc, x - 55, y - 35, x + 55, y + 25, 10, 10);
+    DeleteObject(PenB);
+}
+
+void TelevisionWithAntenna::DrawControlPanel()
+{
+    HPEN PenB = CreatePen(PS_SOLID, 2, RGB(0, 0, 0));
+    SelectObject(hdc, PenB);
+    Rectangle(hdc, x - 60, y + 30, x + 60, y + 45);
+    DeleteObject(PenB);
+}
+
+void TelevisionWithAntenna::DrawButtons()
+{
+    HPEN PenB = CreatePen(PS_SOLID, 2, RGB(0, 0, 0));
+    SelectObject(hdc, PenB);
+    Ellipse(hdc, x - 45, y + 42, x - 35, y + 32);
+    Ellipse(hdc, x - 30, y + 42, x - 20, y + 32);
+    Ellipse(hdc, x + 30, y + 42, x + 40, y + 32);
+    DeleteObject(PenB);
+}
+
+void TelevisionWithAntenna::DrawLegs()
+{
+    HPEN PenB = CreatePen(PS_SOLID, 2, RGB(0, 0, 0));
+    SelectObject(hdc, PenB);
+    Rectangle(hdc, x - 70, y + 70, x - 60, y + 80);
+    Rectangle(hdc, x + 60, y + 70, x + 70, y + 80);
+    DeleteObject(PenB);
+}
+
+//start TelevisionWithAntenna::DrawAntenna
+void TelevisionWithAntenna::DrawAntenna()
+{
     HPEN PenAntenna = CreatePen(PS_SOLID, 3, RGB(0, 0, 0));
     HPEN oldPen = (HPEN)SelectObject(hdc, PenAntenna);
 
-    // Левая антенна
     MoveToEx(hdc, x - 30, y - 60, NULL);
     LineTo(hdc, x - 50, y - 100);
-
-    // Правая антенна
     MoveToEx(hdc, x + 30, y - 60, NULL);
     LineTo(hdc, x + 50, y - 100);
 
-    // Шарики на концах антенн
     HPEN PenBall = CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
     SelectObject(hdc, PenBall);
-    Ellipse(hdc, x - 55, y - 105, x - 45, y - 95); // Левый шарик
-    Ellipse(hdc, x + 45, y - 105, x + 55, y - 95); // Правый шарик
+    Ellipse(hdc, x - 55, y - 105, x - 45, y - 95);
+    Ellipse(hdc, x + 45, y - 105, x + 55, y - 95);
 
-    // Восстановление пера и очистка ресурсов
     SelectObject(hdc, oldPen);
     DeleteObject(PenAntenna);
     DeleteObject(PenBall);
-}//end TelevisionWithAntenna::Show
-
-//start TelevisionWithAntenna::Hide
-void TelevisionWithAntenna::Hide() 
-{
-    Television::Hide();
-}//end TelevisionWithAntenna::Hide
-
-// Разбитый телевизор (с сеткой на экране)
+}//end TelevisionWithAntenna::DrawAntenna
+  
 //start BrokenTelevision::BrokenTelevision
-BrokenTelevision::BrokenTelevision(int InitX, int InitY) : Television(InitX, InitY) 
+BrokenTelevision::BrokenTelevision(int InitX, int InitY) : TVBase(InitX, InitY)
 {
-    id = 2; // Идентификатор разбитого телевизора
+    SetId(2);
 }//end BrokenTelevision::BrokenTelevision
 
-//BrokenTelevision::~BrokenTelevision
-BrokenTelevision::~BrokenTelevision() 
-{ 
+//start BrokenTelevision::~BrokenTelevision
+BrokenTelevision::~BrokenTelevision()
+{
 }//end BrokenTelevision::~BrokenTelevision
 
-// Отрисовка разбитого телевизора
-//start BrokenTelevision::Show
-void BrokenTelevision::Show() 
+// Методы BrokenTelevision
+void BrokenTelevision::DrawBody()
 {
-    //Рисуем базовый телевизор
-    Television::Show();
+    HPEN PenR = CreatePen(PS_SOLID, 2, RGB(139, 69, 19));
+    SelectObject(hdc, PenR);
+    Rectangle(hdc, x - 80, y - 60, x + 80, y + 70);
+    DeleteObject(PenR);
+}
 
-    //Добавляем сетку "разбитого" экрана
+void BrokenTelevision::DrawScreen()
+{
+    HPEN PenB = CreatePen(PS_SOLID, 2, RGB(0, 0, 0));
+    SelectObject(hdc, PenB);
+    Rectangle(hdc, x - 70, y - 50, x + 70, y + 50);
+    RoundRect(hdc, x - 55, y - 35, x + 55, y + 25, 10, 10);
+    DeleteObject(PenB);
+}
+
+void BrokenTelevision::DrawControlPanel()
+{
+    HPEN PenB = CreatePen(PS_SOLID, 2, RGB(0, 0, 0));
+    SelectObject(hdc, PenB);
+    Rectangle(hdc, x - 60, y + 30, x + 60, y + 45);
+    DeleteObject(PenB);
+}
+
+void BrokenTelevision::DrawButtons()
+{
+    HPEN PenB = CreatePen(PS_SOLID, 2, RGB(0, 0, 0));
+    SelectObject(hdc, PenB);
+    Ellipse(hdc, x - 45, y + 42, x - 35, y + 32);
+    Ellipse(hdc, x - 30, y + 42, x - 20, y + 32);
+    Ellipse(hdc, x + 30, y + 42, x + 40, y + 32);
+    DeleteObject(PenB);
+}
+
+void BrokenTelevision::DrawLegs()
+{
+    HPEN PenB = CreatePen(PS_SOLID, 2, RGB(0, 0, 0));
+    SelectObject(hdc, PenB);
+    Rectangle(hdc, x - 70, y + 70, x - 60, y + 80);
+    Rectangle(hdc, x + 60, y + 70, x + 70, y + 80);
+    DeleteObject(PenB);
+}
+
+//start BrokenTelevision::DrawCrackedScreen
+void BrokenTelevision::DrawCrackedScreen()
+{
     HPEN gridPen = CreatePen(PS_SOLID, 1, RGB(100, 100, 255));
     SelectObject(hdc, gridPen);
 
-    // Вертикальные линии сетки
-    for (int i = 1; i <= 8; i++) 
+    for (int i = 1; i <= 8; i++)
     {
         int lineX = x - 55 + (i * 12);
         MoveToEx(hdc, lineX, y - 35, NULL);
         LineTo(hdc, lineX, y + 25);
-    }//end for
+    }
 
-    // Горизонтальные линии сетки
-    for (int i = 1; i <= 5; i++) 
+    for (int i = 1; i <= 5; i++)
     {
         int lineY = y - 35 + (i * 10);
         MoveToEx(hdc, x - 55, lineY, NULL);
         LineTo(hdc, x + 55, lineY);
-    }//end for 
+    }
 
     DeleteObject(gridPen);
-}//end BrokenTelevision::Show
+}//end BrokenTelevision::DrawCrackedScreen
 
-//start BrokenTelevision::Hide
-void BrokenTelevision::Hide() 
+//start TelevisionWithoutLegs::TelevisionWithoutLegs
+TelevisionWithoutLegs::TelevisionWithoutLegs(int InitX, int InitY) : TVBase(InitX, InitY)
 {
-    Television::Hide();
-}//end BrokenTelevision::Hide
-
-// Телевизор без ножек
-//start TelevisionWithoutLegs::TelevisionWithoutLeg
-TelevisionWithoutLegs::TelevisionWithoutLegs(int InitX, int InitY) : Television(InitX, InitY) 
-{
-    id = 3; // Идентификатор телевизора без ножек
-}//end TelevisionWithoutLegs::TelevisionWithoutLeg
+    SetId(3);
+}//end TelevisionWithoutLegs::TelevisionWithoutLegs
 
 //start TelevisionWithoutLegs::~TelevisionWithoutLegs
-TelevisionWithoutLegs::~TelevisionWithoutLegs() 
+TelevisionWithoutLegs::~TelevisionWithoutLegs()
 {
-}//TelevisionWithoutLegs::~TelevisionWithoutLegs
+}//end TelevisionWithoutLegs::~TelevisionWithoutLegs
 
-// Отрисовка телевизора без ножек
-//start TelevisionWithoutLegs::Show
-void TelevisionWithoutLegs::Show() 
+// Методы TelevisionWithoutLegs (без ножек)
+void TelevisionWithoutLegs::DrawBody()
 {
-    visible = true;
-
-    HPEN PenR = CreatePen(PS_SOLID, 2, RGB(139, 69, 19)); // Коричневый
-    HPEN PenB = CreatePen(PS_SOLID, 2, RGB(0, 0, 0));     // Черный
-
-    // Рисуем те же элементы, что и базовый телевизор, но без ножек
+    HPEN PenR = CreatePen(PS_SOLID, 2, RGB(139, 69, 19));
     SelectObject(hdc, PenR);
     Rectangle(hdc, x - 80, y - 60, x + 80, y + 70);
+    DeleteObject(PenR);
+}
 
+void TelevisionWithoutLegs::DrawScreen()
+{
+    HPEN PenB = CreatePen(PS_SOLID, 2, RGB(0, 0, 0));
     SelectObject(hdc, PenB);
     Rectangle(hdc, x - 70, y - 50, x + 70, y + 50);
-    Rectangle(hdc, x - 60, y + 30, x + 60, y + 45);
     RoundRect(hdc, x - 55, y - 35, x + 55, y + 25, 10, 10);
+    DeleteObject(PenB);
+}
 
-    // Кнопки 
+void TelevisionWithoutLegs::DrawControlPanel()
+{
+    HPEN PenB = CreatePen(PS_SOLID, 2, RGB(0, 0, 0));
+    SelectObject(hdc, PenB);
+    Rectangle(hdc, x - 60, y + 30, x + 60, y + 45);
+    DeleteObject(PenB);
+}
+
+void TelevisionWithoutLegs::DrawButtons()
+{
+    HPEN PenB = CreatePen(PS_SOLID, 2, RGB(0, 0, 0));
+    SelectObject(hdc, PenB);
     Ellipse(hdc, x - 45, y + 42, x - 35, y + 32);
     Ellipse(hdc, x - 30, y + 42, x - 20, y + 32);
     Ellipse(hdc, x + 30, y + 42, x + 40, y + 32);
-
     DeleteObject(PenB);
-    DeleteObject(PenR);
-}//end TelevisionWithoutLegs::Show
+}
 
-//start TelevisionWithoutLegs::Hide
-void TelevisionWithoutLegs::Hide() 
-{
-    Television::Hide();
-}//end TelevisionWithoutLegs::Hide
-
-// Телевизор без кнопок
 //start TelevisionWithoutButtons::TelevisionWithoutButtons
-TelevisionWithoutButtons::TelevisionWithoutButtons(int InitX, int InitY) : Television(InitX, InitY) 
+TelevisionWithoutButtons::TelevisionWithoutButtons(int InitX, int InitY) : TVBase(InitX, InitY)
 {
-    id = 4; // Идентификатор телевизора без кнопок
+    SetId(4);
 }//end TelevisionWithoutButtons::TelevisionWithoutButtons
 
 //start TelevisionWithoutButtons::~TelevisionWithoutButtons
-TelevisionWithoutButtons::~TelevisionWithoutButtons() 
-{ 
+TelevisionWithoutButtons::~TelevisionWithoutButtons()
+{
 }//end TelevisionWithoutButtons::~TelevisionWithoutButtons
 
-// Отрисовка телевизора без кнопок
-//start TelevisionWithoutButtons::Show
-void TelevisionWithoutButtons::Show() 
+// Методы TelevisionWithoutButtons (без кнопок)
+void TelevisionWithoutButtons::DrawBody()
 {
-    visible = true;
-
-    HPEN PenR = CreatePen(PS_SOLID, 2, RGB(139, 69, 19)); // Коричневый
-    HPEN PenB = CreatePen(PS_SOLID, 2, RGB(0, 0, 0));     // Черный
-
+    HPEN PenR = CreatePen(PS_SOLID, 2, RGB(139, 69, 19));
     SelectObject(hdc, PenR);
     Rectangle(hdc, x - 80, y - 60, x + 80, y + 70);
+    DeleteObject(PenR);
+}
 
+void TelevisionWithoutButtons::DrawScreen()
+{
+    HPEN PenB = CreatePen(PS_SOLID, 2, RGB(0, 0, 0));
     SelectObject(hdc, PenB);
     Rectangle(hdc, x - 70, y - 50, x + 70, y + 50);
-    Rectangle(hdc, x - 60, y + 30, x + 60, y + 45);
     RoundRect(hdc, x - 55, y - 35, x + 55, y + 25, 10, 10);
+    DeleteObject(PenB);
+}
 
-    // Ножки
+void TelevisionWithoutButtons::DrawControlPanel()
+{
+    HPEN PenB = CreatePen(PS_SOLID, 2, RGB(0, 0, 0));
+    SelectObject(hdc, PenB);
+    Rectangle(hdc, x - 60, y + 30, x + 60, y + 45);
+    DeleteObject(PenB);
+}
+
+void TelevisionWithoutButtons::DrawLegs()
+{
+    HPEN PenB = CreatePen(PS_SOLID, 2, RGB(0, 0, 0));
+    SelectObject(hdc, PenB);
     Rectangle(hdc, x - 70, y + 70, x - 60, y + 80);
     Rectangle(hdc, x + 60, y + 70, x + 70, y + 80);
-
     DeleteObject(PenB);
-    DeleteObject(PenR);
-}//end TelevisionWithoutButtons::Show
+}
 
-//start TelevisionWithoutButtons::Hide
-void TelevisionWithoutButtons::Hide() 
+//start TelevisionWithSpeakers::TelevisionWithSpeakers
+TelevisionWithSpeakers::TelevisionWithSpeakers(int InitX, int InitY) : Television(InitX, InitY)
 {
-    Television::Hide();
-}//end TelevisionWithoutButtons::Hide 
+    SetId(5);
+}//end TelevisionWithSpeakers::TelevisionWithSpeakers
+
+//start TelevisionWithSpeakers::~TelevisionWithSpeakers
+TelevisionWithSpeakers::~TelevisionWithSpeakers()
+{
+}//end TelevisionWithSpeakers::~TelevisionWithSpeakers
+
+// Методы TelevisionWithSpeakers (с динамиками)
+//void TelevisionWithSpeakers::DrawBody()
+//{
+//    HPEN PenR = CreatePen(PS_SOLID, 2, RGB(139, 69, 19));
+//    SelectObject(hdc, PenR);
+//    Rectangle(hdc, x - 80, y - 60, x + 80, y + 70);
+//    DeleteObject(PenR);
+//}
+//
+//void TelevisionWithSpeakers::DrawScreen()
+//{
+//    HPEN PenB = CreatePen(PS_SOLID, 2, RGB(0, 0, 0));
+//    SelectObject(hdc, PenB);
+//    Rectangle(hdc, x - 70, y - 50, x + 70, y + 50);
+//    RoundRect(hdc, x - 55, y - 35, x + 55, y + 25, 10, 10);
+//    DeleteObject(PenB);
+//}
+//
+//void TelevisionWithSpeakers::DrawControlPanel()
+//{
+//    HPEN PenB = CreatePen(PS_SOLID, 2, RGB(0, 0, 0));
+//    SelectObject(hdc, PenB);
+//    Rectangle(hdc, x - 60, y + 30, x + 60, y + 45);
+//    DeleteObject(PenB);
+//}
+//
+//void TelevisionWithSpeakers::DrawButtons()
+//{
+//    HPEN PenB = CreatePen(PS_SOLID, 2, RGB(0, 0, 0));
+//    SelectObject(hdc, PenB);
+//    Ellipse(hdc, x - 45, y + 42, x - 35, y + 32);
+//    Ellipse(hdc, x - 30, y + 42, x - 20, y + 32);
+//    Ellipse(hdc, x + 30, y + 42, x + 40, y + 32);
+//    DeleteObject(PenB);
+//}
+
+void TelevisionWithSpeakers::DrawLegs()
+{
+    HPEN PenB = CreatePen(PS_SOLID, 2, RGB(0, 0, 0));
+    SelectObject(hdc, PenB);
+    Rectangle(hdc, x - 70, y + 70, x - 60, y + 100); 
+    Rectangle(hdc, x + 60, y + 70, x + 70, y + 100);
+    DeleteObject(PenB);
+}
+
+//start TelevisionWithSpeakers::DrawSpeakers
+void TelevisionWithSpeakers::DrawSpeakers()
+{
+    HPEN PenGray = CreatePen(PS_SOLID, 2, RGB(128, 128, 128));
+    SelectObject(hdc, PenGray);
+
+    Rectangle(hdc, x - 100, y - 40, x - 85, y + 40);
+    Rectangle(hdc, x + 85, y - 40, x + 100, y + 40);
+
+    DeleteObject(PenGray);
+}//end TelevisionWithSpeakers::DrawSpeakers
