@@ -1,4 +1,4 @@
-#include <windows.h>
+ #include <windows.h>
 #include <iostream>
 #include "televisor.h"
 
@@ -6,7 +6,7 @@ using namespace std;
 
 HDC hdc;
 
-bool CheckCollision(Television* tv, Figure* figure);
+bool CheckCollision(TVBase* tv, Figure* figure);
 
 int main() 
 {
@@ -36,27 +36,31 @@ int main()
 	Aquarium aqua(550, 500, 250, 180);
 	TelevisionWithoutLegs tvwlg(x0, y0);
 	TelevisionWithoutButtons tvWB(x0, y0);
+    TelevisionWithSpeakers tvSpeakers(x0, y0);
+    SimpleCircle circle(500, 130, 30);
 
-	Television* CurrentTV = &tv;
+    TVBase* CurrentTV = &tv;
 
-	Television* bufTv[5];
-	bufTv[0] = &tv;
-	bufTv[1] = &tvAnt;
-	bufTv[2] = &tvGrid;
-	bufTv[3] = &tvwlg;
-	bufTv[4] = &tvWB;
+    TVBase* bufTv[6];
+    bufTv[0] = &tv;
+    bufTv[1] = &tvAnt;
+    bufTv[2] = &tvGrid;
+    bufTv[3] = &tvwlg;
+    bufTv[4] = &tvWB;
+    bufTv[5] = &tvSpeakers;
 
-	Figure* bufFigure[2];
-	bufFigure[0] = &mk;
-	bufFigure[1] = &aqua;
+    Figure* bufFigure[3];
+    bufFigure[0] = &mk;
+    bufFigure[1] = &aqua;
+    bufFigure[2] = &circle;
 
-	for (int i = 0; i < 2; i++) 
+	for (int i = 0; i < 3; i++) 
 	{
 		bufFigure[i]->Show();
 	}//end for
 	CurrentTV->Show();
 
-	cout << "Управление телевизором стрелками. ESC — выход.\n";
+	cout << "РЈРїСЂР°РІР»РµРЅРёРµ С‚РµР»РµРІРёР·РѕСЂРѕРј СЃС‚СЂРµР»РєР°РјРё. ESC вЂ” РІС‹С…РѕРґ.\n";
 
     bool canCollide = true;
 
@@ -82,9 +86,9 @@ int main()
 
         CurrentTV->MoveTo(newX, newY);
 
-        // Проверяем столкновение
+        // РџСЂРѕРІРµСЂСЏРµРј СЃС‚РѕР»РєРЅРѕРІРµРЅРёРµ
         bool isCollidingNow = false;
-        for (int i = 0; i < 2; i++)
+        for (int i = 0; i < 3; i++)
         {
             if (CheckCollision(CurrentTV, bufFigure[i]))
             {
@@ -95,12 +99,12 @@ int main()
 
         if (isCollidingNow && canCollide)
         {
-            //Не меняем телевизор
+            //РќРµ РјРµРЅСЏРµРј С‚РµР»РµРІРёР·РѕСЂ
             canCollide = false; 
 
             CurrentTV->Hide();
-            int currentIndex = CurrentTV->id;
-            int nextIndex = (currentIndex + 1) % 5;
+            int currentIndex = CurrentTV->GetId();
+            int nextIndex = (currentIndex + 1) % 6;
 
             CurrentTV = bufTv[nextIndex];
             CurrentTV->MoveTo(newX, newY);
@@ -108,8 +112,8 @@ int main()
             Sleep(120);
         }//end if
 
-        // Если вышли из объекта, то при следующем столкновении 
-        // меняем телевизор на следующий
+        // Р•СЃР»Рё РІС‹С€Р»Рё РёР· РѕР±СЉРµРєС‚Р°, С‚Рѕ РїСЂРё СЃР»РµРґСѓСЋС‰РµРј СЃС‚РѕР»РєРЅРѕРІРµРЅРёРё 
+        // РјРµРЅСЏРµРј С‚РµР»РµРІРёР·РѕСЂ РЅР° СЃР»РµРґСѓСЋС‰РёР№
         if (!isCollidingNow)
         {
             canCollide = true;
