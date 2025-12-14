@@ -1,12 +1,14 @@
 #pragma once
 #include <Windows.h>
 
+//---IShow---
 class IShow
 {
 public:
     virtual void Show() = 0;
 };
 
+//---Location---
 class Location
 {
 protected:
@@ -22,7 +24,7 @@ public:
     void SetY(int NewY);
 };
 
-//Абстрактный
+//---Bounds---
 class Bounds : public Location
 {
 public:
@@ -33,7 +35,7 @@ public:
     virtual int GetBottom() = 0;
 };
 
-//Абстрактный
+//---Point---
 class Point : public Bounds
 {
 protected:
@@ -53,6 +55,7 @@ public:
     int GetBottom() override { return y + 5; }
 };
 
+//---TVBase---
 class TVBase : public Point
 {
 protected:
@@ -85,7 +88,7 @@ public:
     virtual int GetBottom() override { return y + 85; }
 };
 
-// Базовый телевизор 
+//---Television--- 
 class Television : public TVBase
 {
 protected:
@@ -108,7 +111,7 @@ public:
     int GetBottom() override { return y + 85; }
 };
 
-// Телевизор с антенной
+//---TelevisionWithAntenna---
 class TelevisionWithAntenna : public TVBase
 {
 protected:
@@ -130,7 +133,7 @@ public:
     int GetRight() override { return x + 90; }
 };
 
-// Сломанный телевизор
+//---BrokenTelevision---
 class BrokenTelevision : public TVBase
 {
 protected:
@@ -152,7 +155,7 @@ public:
     int GetRight() override { return x + 90; }
 };
 
-// Телевизор без ножек
+//---TelevisionWithoutLegs---
 class TelevisionWithoutLegs : public TVBase
 {
 protected:
@@ -174,7 +177,7 @@ public:
     int GetRight() override { return x + 85; }
 };
 
-// Телевизор без кнопок
+//---TelevisionWithoutButtons---
 class TelevisionWithoutButtons : public TVBase
 {
 protected:
@@ -196,7 +199,7 @@ public:
     int GetRight() override { return x + 85; }
 };
 
-// Телевизор с динамиками
+//---TelevisionWithSpeakers---
 class TelevisionWithSpeakers : public Television
 {
 protected:
@@ -216,6 +219,7 @@ public:
     int GetBottom() override { return y + 85; }
 };
 
+//---Figure---
 class Figure : public Point, public IShow
 {
 protected:
@@ -251,6 +255,7 @@ public:
     virtual void Show() override = 0;
 };
 
+//---Molotok---
 class Molotok : public Figure
 {
 public:
@@ -259,6 +264,7 @@ public:
     void Show() override;
 };
 
+//---Aquarium---
 class Aquarium : public Figure
 {
 public:
@@ -267,6 +273,7 @@ public:
     void Show() override;
 };
 
+//---SimpleCircle---
 class SimpleCircle : public Figure
 {
 protected:
